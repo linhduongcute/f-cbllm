@@ -29,13 +29,13 @@ if args.dataset == 'SetFit/sst2':
 # ─── Balance Dataset ────────────────────────────────────────────────────────
 d_list = []
 for i in range(CFG.class_num[args.dataset]):
-    d_list.append(train_dataset.filter(lambda e: e['label'] == i).select(range(2 // CFG.class_num[args.dataset])))
+    d_list.append(train_dataset.filter(lambda e: e['label'] == i).select(range(1000 // CFG.class_num[args.dataset])))
 train_dataset = concatenate_datasets(d_list)
 
 if args.dataset == 'SetFit/sst2':
     d_list = []
     for i in range(CFG.class_num[args.dataset]):
-        d_list.append(val_dataset.filter(lambda e: e['label'] == i).select(range(2 // CFG.class_num[args.dataset])))
+        d_list.append(val_dataset.filter(lambda e: e['label'] == i).select(range(80 // CFG.class_num[args.dataset])))
     val_dataset = concatenate_datasets(d_list)
 
 print("training labeled data len: ", len(train_dataset))
