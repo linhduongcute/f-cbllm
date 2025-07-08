@@ -10,7 +10,7 @@ This is the official repo for the paper: [**Concept Bottleneck Large Language Mo
 
 ## Part I: CB-LLM (classification)
 <p align="center">
-  <img src="./fig/cbllm.png" width="80%" height="80%" />
+  <img src="./fig/cbllm.png" width="80%" />
 </p>
 
 ### Setup
@@ -105,7 +105,7 @@ Please change the argument `--model_path` accordingly if using other settings.
 
 ## Part II: CB-LLM (generation)
 <p align="center">
-  <img src="./fig/cbllm_generation.png" width="80%" height="80%" />
+  <img src="./fig/cbllm_generation.png" width="80%" />
 </p>
 
 ### Setup
