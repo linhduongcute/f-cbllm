@@ -167,7 +167,7 @@ python test_weight.py
 Set the argument `--dataset yelp_polarity`, `--dataset ag_news`, or `--dataset dbpedia_14` to switch the dataset.
 Paste the results to [SankeyMATIC](https://sankeymatic.com/build/) to visualize the weights. For example,
 <p align="center">
-  <img src="./fig/sport_weights.png" width="50%" height="50%" />
+  <img src="./fig/sport_weights.png" width="50%" />
 </p>
 
 #### Intervene the concept neurons and generate a sentence using CB-LLM
