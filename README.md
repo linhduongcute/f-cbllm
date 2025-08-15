@@ -199,6 +199,6 @@ Chung-En Sun, Tuomas Oikarinen, Berk Ustun, and Tsui-Wei Weng. "*Concept Bottlen
    title={Concept Bottleneck Large Language Models},
    author={Chung-En Sun and Tuomas Oikarinen and Berk Ustun and Tsui-Wei Weng},
    journal={ICLR 2025},
-   year={2024}
+   year={2025}
 }
 ```
