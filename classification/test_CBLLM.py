@@ -138,45 +138,6 @@ if __name__ == "__main__":
             h_pre_list.append(h_pre.detach().cpu())
             h_post_list.append(h_post.detach().cpu())
             FL_test_features.append(h_post)
-        
-    # print("get concept features...")
-    # FL_test_features = []
-
-    # for batch in test_loader:
-    #     batch = {k: v.to(device) for k, v in batch.items()}
-    #     with torch.no_grad():
-    #         if 'no_backbone' in cbl_name:
-    #             # output before CBL (h_pre)
-    #             h_pre = preLM(input_ids=batch["input_ids"],
-    #                         attention_mask=batch["attention_mask"]).last_hidden_state
-    #             if args.backbone == 'roberta':
-    #                 h_pre = h_pre[:, 0, :]
-    #             elif args.backbone == 'gpt2':
-    #                 h_pre = eos_pooling(h_pre, batch["attention_mask"])
-    #             else:
-    #                 raise Exception("backbone should be roberta or gpt2")
-
-    #             # output after CBL (h_post)
-    #             h_post = cbl(h_pre)
-
-    #         else:
-    #             # backbone + CBL (RobertaCBL or GPT2CBL)
-    #             LM_out = backbone_cbl.backbone(input_ids=batch["input_ids"],
-    #                                         attention_mask=batch["attention_mask"]).last_hidden_state
-    #             if 'roberta' in backbone:
-    #                 h_pre = LM_out[:, 0, :]
-    #             elif 'gpt2' in backbone:
-    #                 h_pre = eos_pooling(LM_out, batch["attention_mask"])
-    #             else:
-    #                 raise Exception("backbone should be roberta or gpt2")
-
-    #             # output after CBL
-    #             h_post = backbone_cbl.cbl(h_pre)
-
-    #         # save embedding
-    #         h_pre_list.append(h_pre.detach().cpu())
-    #         h_post_list.append(h_post.detach().cpu())
-    #         FL_test_features.append(h_post)
 
     # Concat embedding
     test_c = torch.cat(FL_test_features, dim=0).detach().cpu()
