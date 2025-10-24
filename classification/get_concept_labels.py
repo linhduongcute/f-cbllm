@@ -14,7 +14,7 @@ import time
 parser = argparse.ArgumentParser()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-parser.add_argument("--dataset", type=str, default="SetFit/sst2")
+parser.add_argument("--dataset", type=str, default="Linhduongcute/SOF")  #change default dataset here
 parser.add_argument("--concept_text_sim_model", type=str, default="mpnet", help="mpnet, simcse or angle")
 
 parser.add_argument("--max_length", type=int, default=512)

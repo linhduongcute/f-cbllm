@@ -11,7 +11,7 @@ from utils import eos_pooling
 parser = argparse.ArgumentParser()
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-parser.add_argument("--dataset", type=str, default="SetFit/sst2")
+parser.add_argument("--dataset", type=str, default="SetFit/sst2 ") 
 parser.add_argument("--model_path", type=str, default="baseline_models/roberta/backbone_finetuned_sst2.pt")
 parser.add_argument("--batch_size", type=int, default=128)
 parser.add_argument('--tune_mlp_only', action=argparse.BooleanOptionalAction)

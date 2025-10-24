@@ -73,7 +73,7 @@ def batch_label_split(dataset, split_name, llm, tokenizer, sampling_params, inst
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset", type=str, default="SetFit/sst2")
+    parser.add_argument("--dataset", type=str, default="Linhduongcute/SOF") #change default dataset here
     parser.add_argument("--tensor_parallel_size", type=int, default=4)
     args = parser.parse_args()
 
@@ -114,6 +114,8 @@ if __name__ == "__main__":
         temp = "According to the news article: '{}', the news article is about '{}' topic. yes or no?"
     elif args.dataset == "dbpedia_14":
         temp = "According to the Wikipedia article: '{}', the Wikipedia article is about '{}' topic. yes or no?"
+    elif args.dataset == "Linhduongcute/SOF":
+        temp = "According to the Stack Overflow post: '{}', the Stack Overflow post is about '{}' topic. yes or no?"
     else:
         raise ValueError(f"Unsupported dataset {args.dataset}")
 

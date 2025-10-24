@@ -63,7 +63,8 @@ def get_labels(n, d):
         return agnews_labels(n)
     if d == 'dbpedia_14':
         return dbpedia_labels(n)
-
+    if d == "Linhduongcute/SOF":
+        return stack_over_flow_labels(n)
     return None
 
 def sst2_labels(n):
@@ -117,3 +118,10 @@ def dbpedia_labels(n):
         return 12
     else:
         return 13
+    
+def stack_over_flow_labels(n):
+    boundaries = [20, 40, 60]
+    for i, bound in enumerate(boundaries):
+        if n < bound:
+            return i
+    return len(boundaries)

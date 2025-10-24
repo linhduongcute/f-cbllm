@@ -62,6 +62,8 @@ elif args.dataset == 'agnews':
     temp = "According to the news article: '{}', the news article is about '{}' topic. yes or no?"
 elif args.dataset == 'dbpedia_14':
     temp = "According to the Wikipedia article: '{}', the Wikipedia article is about '{}' topic. yes or no?"
+elif args.dataset == 'Linhduongcute/SOF':
+    temp = "According to the Stack Overflow post: '{}', the Stack Overflow post is about '{}' topic. yes or no?"
 
 # ─── Generate Labels for Train ──────────────────────────────────────────────
 print("generating train labels")
