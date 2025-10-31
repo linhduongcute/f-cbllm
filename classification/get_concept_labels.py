@@ -7,7 +7,7 @@ from datasets import load_dataset
 import config as CFG
 from transformers import AutoTokenizer, AutoModel, AutoModelForCausalLM
 from peft import PeftModel, PeftConfig
-from utils import mean_pooling, decorate_dataset, decorate_concepts
+from utils import mean_pooling, decorate_dataset, decorate_concepts, get_labels, normalize
 import sys
 import time
 
@@ -283,3 +283,4 @@ np.save(prefix + "concept_labels_train.npy", train_similarity)
 if args.dataset == 'SetFit/sst2':
 
     np.save(prefix + "concept_labels_val.npy", val_similarity)
+
