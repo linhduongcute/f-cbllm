@@ -285,11 +285,40 @@ if __name__ == "__main__":
     end = time.time()
 
     print("time of training CBL:", (end - start) / 3600, "hours")
+    print("\n Collecting CBL projection statistics...")
+    
+    # Chuyển mô hình sang eval
+    if args.tune_cbl_only:
+        cbl.eval()
+    else:
+        backbone_cbl.eval()
+    
+    all_projections = []
+    
+    with torch.no_grad():
+        for batch in train_loader:
+            batch_text, batch_sim = batch[0], batch[1]
+            batch_text = {k: v.to(device) for k, v in batch_text.items()}
+    
+            # Lấy features từ backbone
+            if args.tune_cbl_only:
+                LM_features = preLM(input_ids=batch_text["input_ids"], attention_mask=batch_text["attention_mask"]).last_hidden_state
+                if args.backbone == 'roberta':
+                    LM_features = LM_features[:, 0, :]
+                elif args.backbone == 'gpt2':
+                    LM_features = eos_pooling(LM_features, batch_text["attention_mask"])
+                proj = cbl(LM_features)
+            else:
+                proj = backbone_cbl(batch_text)
+    
+            all_projections.append(proj.cpu().numpy())
+    
     all_projections = np.concatenate(all_projections, axis=0)
-
+    
     all_projections = torch.tensor(all_projections)
     all_projections = F.normalize(all_projections, p=2, dim=1)
     all_projections = all_projections.cpu().numpy()
+
     
     # Tính thống kê tổng thể trên tất cả giá trị
     mean_val = np.mean(all_projections)
@@ -315,4 +344,3 @@ if __name__ == "__main__":
     plt.savefig("cbl_projection_distribution.png")
     
     
-
