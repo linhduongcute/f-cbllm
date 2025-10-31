@@ -145,6 +145,64 @@ train_similarity = torch.cat(train_sim, dim=0).cpu().detach().numpy()
 end = time.time()
 print("time of concept scoring:", (end-start)/3600, "hours")
 
+import numpy as np
+import matplotlib.pyplot as plt
+import pandas as pd
+
+num_concepts = len(concept_set)
+num_texts = len(train_dataset)
+labels = np.array(train_dataset['label'])
+
+mean_sim_per_concept = train_similarity.mean(axis=0) 
+
+concept_labels = np.array([get_labels(i, args.dataset) for i in range(num_concepts)])
+
+same_label_mean = []
+for c_idx, c_lbl in enumerate(concept_labels):
+    text_idx = np.where(labels == c_lbl)[0]
+    if len(text_idx) > 0:
+        same_label_mean.append(train_similarity[text_idx, c_idx].mean())
+    else:
+        same_label_mean.append(np.nan)
+same_label_mean = np.array(same_label_mean)
+
+print(f"\n Số lượng concept: {num_concepts}")
+print(f" Tổng số text: {num_texts}")
+unique, counts = np.unique(labels, return_counts=True)
+for u, c in zip(unique, counts):
+    print(f" - Nhãn {u}: {c} mẫu")
+
+plt.figure(figsize=(12, 5))
+
+plt.subplot(1, 2, 1)
+plt.hist(mean_sim_per_concept, bins=30, range=(-1, 1),
+         color='skyblue', edgecolor='black', alpha=0.7)
+plt.title("Phân bố mean similarity của tất cả concepts")
+plt.xlabel("Mean cosine similarity (-1 → 1)")
+plt.ylabel("Số lượng concept")
+
+plt.subplot(1, 2, 2)
+plt.hist(same_label_mean[~np.isnan(same_label_mean)], bins=30, range=(-1, 1),
+         color='tomato', edgecolor='black', alpha=0.7)
+plt.title("Phân bố mean similarity của concepts (chỉ cùng nhãn)")
+plt.xlabel("Mean cosine similarity (-1 → 1)")
+plt.ylabel("Số lượng concept")
+
+plt.tight_layout()
+plt.savefig("concept_similarity.png")
+print("Đã lưu biểu đồ vào concept_similarity.png")
+
+def summarize(name, sims):
+    sims = sims[~np.isnan(sims)]
+    print(f"\n {name}")
+    print(f"  Số concept: {len(sims)}")
+    print(f"  Mean: {np.mean(sims):.6f}")
+    print(f"  Variance: {np.var(sims):.6f}")
+    print(f"  Std: {np.std(sims):.6f}")
+
+summarize("Toàn bộ concepts", mean_sim_per_concept)
+summarize("Concepts cùng nhãn", same_label_mean)
+
 if args.dataset == 'SetFit/sst2':
     val_sim = []
     for batch_sim in val_sim_loader:
@@ -162,6 +220,50 @@ if args.dataset == 'SetFit/sst2':
             text_features = F.normalize(text_features, p=2, dim=1)
         val_sim.append(text_features @ concept_features.T)
     val_similarity = torch.cat(val_sim, dim=0).cpu().detach().numpy()
+    num_texts = len(val_dataset)
+    labels = np.array(val_dataset['label'])
+    
+    mean_sim_per_concept = val_similarity.mean(axis=0) 
+    
+    concept_labels = np.array([get_labels(i, args.dataset) for i in range(num_concepts)])
+    
+    same_label_mean = []
+    for c_idx, c_lbl in enumerate(concept_labels):
+        text_idx = np.where(labels == c_lbl)[0]
+        if len(text_idx) > 0:
+            same_label_mean.append(val_similarity[text_idx, c_idx].mean())
+        else:
+            same_label_mean.append(np.nan)
+    same_label_mean = np.array(same_label_mean)
+    
+    print(f"\n Số lượng concept: {num_concepts}")
+    print(f" Tổng số text: {num_texts}")
+    unique, counts = np.unique(labels, return_counts=True)
+    for u, c in zip(unique, counts):
+        print(f" - Nhãn {u}: {c} mẫu")
+    
+    plt.figure(figsize=(12, 5))
+    
+    plt.subplot(1, 2, 1)
+    plt.hist(mean_sim_per_concept, bins=30, range=(-1, 1),
+             color='skyblue', edgecolor='black', alpha=0.7)
+    plt.title("Phân bố mean similarity của tất cả concepts")
+    plt.xlabel("Mean cosine similarity (-1 → 1)")
+    plt.ylabel("Số lượng concept")
+    
+    plt.subplot(1, 2, 2)
+    plt.hist(same_label_mean[~np.isnan(same_label_mean)], bins=30, range=(-1, 1),
+             color='tomato', edgecolor='black', alpha=0.7)
+    plt.title("Phân bố mean similarity của concepts (chỉ cùng nhãn)")
+    plt.xlabel("Mean cosine similarity (-1 → 1)")
+    plt.ylabel("Số lượng concept")
+    
+    plt.tight_layout()
+    plt.savefig("concept_similarity.png")
+    print("Đã lưu biểu đồ vào concept_similarity.png")
+    
+    summarize("Toàn bộ concepts", mean_sim_per_concept)
+    summarize("Concepts cùng nhãn", same_label_mean)
 
 d_name = args.dataset.replace('/', '_')
 prefix = "./"
@@ -179,4 +281,5 @@ if not os.path.exists(prefix):
 
 np.save(prefix + "concept_labels_train.npy", train_similarity)
 if args.dataset == 'SetFit/sst2':
+
     np.save(prefix + "concept_labels_val.npy", val_similarity)
