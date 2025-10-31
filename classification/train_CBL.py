@@ -283,4 +283,35 @@ if __name__ == "__main__":
                 torch.save(backbone_cbl.state_dict(), prefix + model_name + ".pt")
 
     end = time.time()
+
     print("time of training CBL:", (end - start) / 3600, "hours")
+    all_projections = np.concatenate(all_projections, axis=0)
+
+    proj_min = np.min(all_projections)
+    proj_max = np.max(all_projections)
+    all_projections = 2 * (all_projections - proj_min) / (proj_max - proj_min) - 1
+    
+    # Tính thống kê tổng thể trên tất cả giá trị
+    mean_val = np.mean(all_projections)
+    var_val = np.var(all_projections)
+    std_val = np.std(all_projections)
+    
+    print(" Thống kê CBL projection (toàn bộ giá trị):")
+    print(f"- Mean: {mean_val:.6f}")
+    print(f"- Variance: {var_val:.6f}")
+    print(f"- Std: {std_val:.6f}")
+    print(f"- Tổng số neuron (chiều): {all_projections.shape[1]}")
+    
+    # Flatten để gom toàn bộ giá trị projection của mọi neuron và mọi text
+    flat_proj = all_projections.flatten()
+    
+    plt.figure(figsize=(10,5))
+    sns.histplot(flat_proj, bins=100, kde=True)
+    plt.title("Phân phối giá trị CBL Projection")
+    plt.xlabel("Giá trị projection (trong [-1, 1])")
+    plt.ylabel("Số lượng neurons")
+    plt.xlim(-1, 1)
+    plt.tight_layout()
+    plt.savefig("cbl_projection_distribution.png")
+    
+    
